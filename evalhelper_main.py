@@ -13,4 +13,7 @@ import evalhelper_func as eval
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Hello World!")
+    # eval.getReference()
+    # # eval.getRefPositions("reference_positions.csv")
+
+    print(eval.findReferenceMasks("boegen/Bogen3.jpg"))

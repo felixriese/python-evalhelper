@@ -90,13 +90,15 @@ def getRefPositions(path):
     return posdict
 
 
-def getMSEBetweenTwoImages(im1, im2):
+def getMSEBetweenTwoImages(im1, im2, x_max=36, y_max=36):
     """Calculate mean squared error (MSE) between two images pixel-wise.
 
     Parameters
     ----------
     im1, im2 : images
         Images to be compared with
+    x_max, y_max : int, optional
+        Maximum values of x and y
 
     Returns
     -------
@@ -105,10 +107,10 @@ def getMSEBetweenTwoImages(im1, im2):
 
     """
     mse = 0
-    for i in range(36):
-        for j in range(36):
+    for i in range(y_max):
+        for j in range(x_max):
             mse += (im1[i, j] - im2[i, j])**2
-    return mse/(36*36)
+    return mse/(y_max*x_max)
 
 
 def findReferenceMasks(image):
@@ -133,29 +135,43 @@ def findReferenceMasks(image):
     mask_ul = Image.open("masks/ul.png")
     mask_ul_px = mask_ul.load()
     pos_ul = [0, 0]
-    mse_min = 999999
+    mse_min = 999999.
     for x in range(30, 110):
         for y in range(650, 730):
-            px = im.crop([x, y, x+40, y+40]).load()
-            mse_curr = getMSEBetweenTwoImages(mask_ul_px, px)
+            px = im.crop([x, y, x+52, y+52]).load()
+            mse_curr = getMSEBetweenTwoImages(mask_ul_px, px, 52, 52)
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_ul = [x, y]
-    # print(mse_min, pos_ul)
+    print(mse_min, pos_ul)
+
+    # mask upper middle
+    mask_um = Image.open("masks/ul.png")
+    mask_um_px = mask_um.load()
+    pos_um = [0, 0]
+    mse_min = 999999.
+    for x in range(1070, 1150):
+        for y in range(340, 430):
+            px = im.crop([x, y, x+52, y+52]).load()
+            mse_curr = getMSEBetweenTwoImages(mask_um_px, px, 52, 52)
+            if mse_curr < mse_min:
+                mse_min = mse_curr
+                pos_um = [x, y]
+    print(mse_min, pos_um)
 
     # mask upper right
     mask_ur = Image.open("masks/ur.png")
     mask_ur_px = mask_ur.load()
     pos_ur = [0, 0]
     mse_min = 999999
-    for x in range(2300, 2380):
+    for x in range(2300, 2400):
         for y in range(350, 430):
-            px = im.crop([x, y, x+40, y+40]).load()
-            mse_curr = getMSEBetweenTwoImages(mask_ur_px, px)
+            px = im.crop([x, y, x+54, y+59]).load()
+            mse_curr = getMSEBetweenTwoImages(mask_ur_px, px, 54, 54)
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_ur = [x, y]
-    # print(mse_min, pos_ur)
+    print(mse_min, pos_ur)
 
     # mask lower left
     mask_ll = Image.open("masks/ll.png")
@@ -163,29 +179,29 @@ def findReferenceMasks(image):
     pos_ll = [0, 0]
     mse_min = 999999
     for x in range(30, 110):
-        for y in range(2720, 2789):
-            px = im.crop([x, y, x+40, y+40]).load()
-            mse_curr = getMSEBetweenTwoImages(mask_ll_px, px)
+        for y in range(2720, 2791):
+            px = im.crop([x, y, x+52, y+36]).load()
+            mse_curr = getMSEBetweenTwoImages(mask_ll_px, px, 36, 36)
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_ll = [x, y]
-    # print(mse_min, pos_ll)
+    print(mse_min, pos_ll)
 
-    # mask upper right
+    # mask lower right
     mask_lr = Image.open("masks/lr.png")
     mask_lr_px = mask_lr.load()
     pos_lr = [0, 0]
     mse_min = 999999
-    for x in range(2300, 2380):
+    for x in range(2300, 2400):
         for y in range(2710, 2789):
-            px = im.crop([x, y, x+40, y+40]).load()
-            mse_curr = getMSEBetweenTwoImages(mask_lr_px, px)
+            px = im.crop([x, y, x+51, y+54]).load()
+            mse_curr = getMSEBetweenTwoImages(mask_lr_px, px, 51, 51)
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_lr = [x, y]
-    # print(mse_min, pos_lr)
+    print(mse_min, pos_lr)
 
-    return pos_ul, pos_ur, pos_ll, pos_lr
+    return pos_ul, pos_um, pos_ur, pos_ll, pos_lr
 
 
 def getTransformationMatrix(refPoints, newPoints):
@@ -205,13 +221,14 @@ def getTransformationMatrix(refPoints, newPoints):
 
     """
     def errFunc(x):
-        A = x[:len(refPoints)].reshape(2, 2)
-        b = x[len(refPoints):]
+        A = x[:4].reshape(2, 2)
+        b = x[4:]
         return sum([(norm(np.dot(A, refPoints[i]) + b - newPoints[i]))**2
                     for i in range(len(refPoints))])
 
-    x0 = [1., 1., 1., 1., 0., 0.]
-    res = minimize(errFunc, x0, method="nelder-mead", options={'xtol': 1e-8})
+    x0 = [1., 0., 0., 1., 0., 0.]
+    res = minimize(errFunc, x0, method="nelder-mead",
+                   options={'maxiter': 10000000})   # 'xatol': 1e-12,
     print(res.x)
     return res.x
 

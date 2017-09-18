@@ -143,7 +143,7 @@ def findReferenceMasks(image):
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_ul = [x, y]
-    print(mse_min, pos_ul)
+    # print(mse_min, pos_ul)
 
     # mask upper middle
     mask_um = Image.open("masks/ul.png")
@@ -157,7 +157,7 @@ def findReferenceMasks(image):
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_um = [x, y]
-    print(mse_min, pos_um)
+    # print(mse_min, pos_um)
 
     # mask upper right
     mask_ur = Image.open("masks/ur.png")
@@ -171,7 +171,7 @@ def findReferenceMasks(image):
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_ur = [x, y]
-    print(mse_min, pos_ur)
+    # print(mse_min, pos_ur)
 
     # mask lower left
     mask_ll = Image.open("masks/ll.png")
@@ -185,7 +185,7 @@ def findReferenceMasks(image):
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_ll = [x, y]
-    print(mse_min, pos_ll)
+    # print(mse_min, pos_ll)
 
     # mask lower right
     mask_lr = Image.open("masks/lr.png")
@@ -199,7 +199,7 @@ def findReferenceMasks(image):
             if mse_curr < mse_min:
                 mse_min = mse_curr
                 pos_lr = [x, y]
-    print(mse_min, pos_lr)
+    # print(mse_min, pos_lr)
 
     return pos_ul, pos_um, pos_ur, pos_ll, pos_lr
 
@@ -229,7 +229,7 @@ def getTransformationMatrix(refPoints, newPoints):
     x0 = [1., 0., 0., 1., 0., 0.]
     res = minimize(errFunc, x0, method="nelder-mead",
                    options={'maxiter': 10000000})   # 'xatol': 1e-12,
-    print(res.x)
+    print("tmatrix = ", res.x)
     return res.x
 
 

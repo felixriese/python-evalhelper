@@ -6,8 +6,11 @@
 # Imports
 # ---------------------------------------------------------------------------
 
-from PIL import Image, ImageDraw
+# Standard library
 import csv
+
+# Third-party libraries
+from PIL import Image, ImageDraw
 import numpy as np
 from scipy.optimize import minimize
 from scipy.linalg import norm
@@ -58,7 +61,7 @@ def drawFile(refpos, path):
                refpos["x1"][i], refpos["y1"][i]]
 
         draw.rectangle(box, fill="Black")
-    im.show()
+    #im.show()
 
 
 def getRefPositions(path):
@@ -86,7 +89,7 @@ def getRefPositions(path):
                     posdict.setdefault(c, []).append(v)
                 else:
                     posdict.setdefault(c, []).append(int(v))
-    # print(posdict)
+    #print(posdict)
     return posdict
 
 
@@ -229,7 +232,7 @@ def getTransformationMatrix(refPoints, newPoints):
     x0 = [1., 0., 0., 1., 0., 0.]
     res = minimize(errFunc, x0, method="nelder-mead",
                    options={'maxiter': 10000000})   # 'xatol': 1e-12,
-    print("tmatrix = ", res.x)
+    #print("tmatrix = ", res.x)
     return res.x
 
 
@@ -286,6 +289,47 @@ def getTransformedPositions(tmatrix, path):
         refpos["x1"][i] = newPointLR[0]
         refpos["y1"][i] = newPointLR[1]
 
-    # print(refpos)
+    #print(refpos)
     drawFile(refpos=refpos, path=path)
     return refpos
+
+
+def extractBoxes(refpos, path):
+    """Extract boxes from current file.
+
+    Parameters
+    ----------
+    refpos : dict
+        Dictionary of all reference positions
+    path : str
+        Path to file
+
+    Returns
+    -------
+    images : png
+        Boxes as images
+
+    """
+
+    # load image
+    im = Image.open(path)
+
+    # loop for rectangles
+    for i in range(len(refpos["x0"])-4):
+        # get corner points
+        corners = [refpos["x0"][i]-10, refpos["y0"][i]-10,
+                   refpos["x1"][i]+10, refpos["y1"][i]+10]
+        # cut box out of image
+        box = im.crop(corners)
+        # resize to 40x40 image
+        box = box.resize((40,40))
+        # iterative folder
+        folder = path[7:13]
+        # iterative name
+        name = "box" + str(i)
+        # save as image
+        box.save("boxes/" + folder + "/" + name + ".png")
+
+
+
+

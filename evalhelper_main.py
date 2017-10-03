@@ -15,6 +15,7 @@ import numpy as np
 # Own scripts
 import evalhelper_func as eval
 import evalhelper_dataloader as dl
+import evalhelper_nn as nn
 
 # ---------------------------------------------------------------------------
 # Main routine
@@ -56,7 +57,11 @@ if __name__ == "__main__":
 
     # 3) NN PART
     # load data
-    trainingdata = dl.loaddata()
+    trainingdata, test_data = dl.loaddata()
+    
+    # train NN
+    evalnn = nn.Network([1600, 2])
+    evalnn.SGD(trainingdata, test_data)
 
 
 

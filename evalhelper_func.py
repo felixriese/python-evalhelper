@@ -324,7 +324,7 @@ def extractBoxes(refpos, path):
         # resize to 40x40 image
         box = box.resize((40,40))
         # iterative folder
-        folder = path[7:13]
+        folder = path[path.find("/")+1:path.find(".")]
         # iterative name
         name = "box" + str(i)
         # save as image

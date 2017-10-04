@@ -8,6 +8,7 @@
 
 # Standard library
 import csv
+import os
 
 # Third-party libraries
 from PIL import Image, ImageDraw
@@ -325,10 +326,15 @@ def extractBoxes(refpos, path):
         box = box.resize((40,40))
         # iterative folder
         folder = path[path.find("/")+1:path.find(".")]
+        # path and folder
+        directory = "boxes/" + folder
+        # check if folder exists
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         # iterative name
         name = "box" + str(i)
         # save as image
-        box.save("boxes/" + folder + "/" + name + ".png")
+        box.save(directory + "/" + name + ".png")
 
 
 

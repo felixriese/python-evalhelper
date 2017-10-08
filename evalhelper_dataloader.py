@@ -27,8 +27,8 @@ def loaddata():
 	# number of data
 	nrd = 5573 + 21867
 	# split : training vs test
-	#trdata_nrd = int(round(nrd*0.75))
-	trdata_nrd = nrd - 10001
+	trdata_nrd = int(round(nrd*0.75))
+	# trdata_nrd = nrd - 10001
 
 	# storage of data, nrd rows and 1600 columns (pixels)
 	storage = np.zeros(shape=(nrd,1600), dtype=float)
@@ -80,6 +80,7 @@ def loaddata():
 	#training_inputs = [np.reshape(x, (1600, 1)) for x in storage]
 	#training_results = [np.reshape(y, (2,1)) for y in yvalues]
 	#dataset = zip(training_inputs, training_results)
+	random.seed(1)
 	random.shuffle(dataset)
 	# split into training and test data
 	training_data = dataset[:trdata_nrd]
@@ -118,12 +119,3 @@ def loadbogen(path):
 
 	# return data
 	return storage
-
-
-
-
-
-
-
-
-

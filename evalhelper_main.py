@@ -9,10 +9,13 @@
 # Standard library
 import glob
 import pdb
+import sys
 
 # Third-party libraries
 import numpy as np
 from PIL import Image
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report
 
 # Own scripts
 import evalhelper_func as eval
@@ -75,6 +78,7 @@ if __name__ == "__main__":
     # 2.1) train NN
     # load training data
     trainingdata, testdata = dl.loaddata()
+
     # actual training of the NN
     evalnn = nn.Network([1600, 2])
     evalnn.SGD(trainingdata, testdata)
@@ -103,14 +107,21 @@ if __name__ == "__main__":
         summarystats[bogencounter] = summary
 
     # 2.3) Summary statistics
-    # evaluate summary
-    stats = st.percentages(summarystats)
-
-    # print summary
-    print("###", "\n", "Boegen - Evaluation", "\n", "###")
-    print(stats)
+    # evaluate and print summary
+    st.printStats(summarystats)
 
 
-
-
-
+    # # scikit test
+    # mlp = MLPClassifier(hidden_layer_sizes=(10), batch_size=50,
+    #                     activation="logistic", solver="sgd",
+    #                     learning_rate_init=0.1, max_iter=15)
+    # mlp.fit([np.reshape(x[0], (1600,)) for x in trainingdata],
+    #         [np.reshape(x[1], (2,)) for x in trainingdata])
+    # y_test = mlp.predict([np.reshape(x[0], (1600,)) for x in trainingdata])
+    # pdb.set_trace()
+    # print(classification_report(np.array([np.reshape(x[1], (2,)) for x in trainingdata], dtype=int), y_test))
+    # # score = mlp.score([np.reshape(x[0], (1600,)) for x in testdata],
+    # #           [int(x[1][1]) for x in testdata])
+    # # print(score)
+    # sys.exit(0)
+    # # pdb.set_trace()

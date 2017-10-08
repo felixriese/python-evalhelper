@@ -10,6 +10,7 @@
 import glob
 import pdb
 import sys
+import argparse
 
 # Third-party libraries
 import numpy as np
@@ -29,6 +30,18 @@ import evalhelper_statistics as st
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+
+    # get path to boegen files
+    parser = argparse.ArgumentParser(description="Get file path.")
+    parser.add_argument("-i", "--input", type=str)
+    parser_args = parser.parse_args()
+    path_to_boegen = parser_args.input
+    if path_to_boegen is None:
+        print("Error: Correct use of the script see below.")
+        print("python3 evalhelper_main.py -i <PathToBoegenFiles>")
+        sys.exit(0)
+
+    # TODO add path_to_boegen to code
 
     # DO NOT CHANGE THE reference file: "boegen/Bogen3.jpg"
     reference_file = "boegen/Bogen3.jpg"

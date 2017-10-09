@@ -35,6 +35,7 @@ def getReference(doDraw=False):
         Dictionary of all reference positions
 
     """
+
     path = "boegen/Bogen3.jpg"
     refpos = getRefPositions("reference_positions.csv")
 
@@ -55,6 +56,7 @@ def drawFile(refpos, path):
         Path to file
 
     """
+
     im = Image.open(path)
     draw = ImageDraw.Draw(im)
     for i in range(len(refpos["x0"])):
@@ -79,6 +81,7 @@ def getRefPositions(path):
         Dictionary containing the positions of the reference file.
 
     """
+
     posdict = {}
 
     with open(path) as posfile:
@@ -110,6 +113,7 @@ def getMSEBetweenTwoImages(im1, im2, x_max=36, y_max=36):
         Mean squared error
 
     """
+
     mse = 0
     for i in range(y_max):
         for j in range(x_max):
@@ -133,6 +137,7 @@ def findReferenceMasks(image):
         Positions [x,y] of the reference points (corners).
 
     """
+
     im = Image.open(image)
 
     # mask upper left
@@ -224,6 +229,7 @@ def getTransformationMatrix(refPoints, newPoints):
         Matrix A and vector b of the linear transformation
 
     """
+
     def errFunc(x):
         A = x[:4].reshape(2, 2)
         b = x[4:]
@@ -253,6 +259,7 @@ def transformPoint(tmatrix, point):
         Transformed 2D point
 
     """
+
     A = tmatrix[:4].reshape(2, 2)
     b = tmatrix[4:]
     newpoint = np.dot(A, point) + b
@@ -275,6 +282,7 @@ def getTransformedPositions(tmatrix, path):
         New dictionary of all reference positions
 
     """
+
     refpos = getReference(doDraw=True)
 
     # transform point for point
@@ -336,7 +344,6 @@ def extractBoxes(refpos, path):
         name = "box" + str(i)
         # save as image
         box.save(directory + "/" + name + ".png")
-
 
 
 

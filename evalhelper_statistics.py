@@ -6,6 +6,10 @@
 # Imports
 # ---------------------------------------------------------------------------
 
+# Standard library
+import pdb
+
+# Third-party libraries
 import numpy as np
 
 # ---------------------------------------------------------------------------
@@ -14,6 +18,19 @@ import numpy as np
 
 
 def printStats(summary):
+    """ Print statistics of evaluated boegen.
+
+    Parameters
+    ----------
+    summary : ndarray
+        evaluation results
+
+    Returns
+    -------
+    None : None
+        just printing of results
+
+    """
 
     # storage
     stats = np.zeros(shape=(14,5), dtype=float)
@@ -32,6 +49,20 @@ def printStats(summary):
 
 
 def getAverage(question):
+    """ Calculate average for a question.
+
+    Parameters
+    ----------
+    question : ndarray
+        answers that are to be averaged
+
+    Returns
+    -------
+    av : float
+        average result
+
+    """
+
     av = 0
     for i, a in enumerate(question):
         av += (i+1) * a / 100

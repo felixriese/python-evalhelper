@@ -41,8 +41,6 @@ if __name__ == "__main__":
         print("python3 evalhelper_main.py -i <PathToBoegenFiles>")
         sys.exit(0)
 
-    # TODO add path_to_boegen to code
-
     # DO NOT CHANGE THE reference file: "boegen/Bogen3.jpg"
     reference_file = "boegen/Bogen3.jpg"
 
@@ -50,7 +48,9 @@ if __name__ == "__main__":
     filecounter = 1
 
     # 1) IMAGE PART
-    """for current_file in glob.glob("boegen/*.jpg"):
+    #for current_file in glob.glob("boegen/*.jpg"):
+    path_to_iterate = path_to_boegen + "/*.jpg"
+    for current_file in glob.glob(path_to_iterate):
 
         #if current_file == reference_file:
         #    continue
@@ -85,7 +85,6 @@ if __name__ == "__main__":
 
         # iteration
         filecounter = filecounter + 1
-        """
 
     # 2) NN PART
     # 2.1) train NN
@@ -123,18 +122,3 @@ if __name__ == "__main__":
     # evaluate and print summary
     st.printStats(summarystats)
 
-
-    # # scikit test
-    # mlp = MLPClassifier(hidden_layer_sizes=(10), batch_size=50,
-    #                     activation="logistic", solver="sgd",
-    #                     learning_rate_init=0.1, max_iter=15)
-    # mlp.fit([np.reshape(x[0], (1600,)) for x in trainingdata],
-    #         [np.reshape(x[1], (2,)) for x in trainingdata])
-    # y_test = mlp.predict([np.reshape(x[0], (1600,)) for x in trainingdata])
-    # pdb.set_trace()
-    # print(classification_report(np.array([np.reshape(x[1], (2,)) for x in trainingdata], dtype=int), y_test))
-    # # score = mlp.score([np.reshape(x[0], (1600,)) for x in testdata],
-    # #           [int(x[1][1]) for x in testdata])
-    # # print(score)
-    # sys.exit(0)
-    # # pdb.set_trace()

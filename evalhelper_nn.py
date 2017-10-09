@@ -59,8 +59,8 @@ class Network(object):
             # print progress if test data is provided
             if test_data:
                 evalu = self.evaluate(test_data)
-                #print("Epoch:", j, evalu, "/" , n_test, "->", round(evalu/n_test*100,2), "%")
-                print(str(evalu) + " from " + str(n_test))
+                print("Epoch:", (j+1), evalu, "from" , n_test, "->", round(evalu/n_test*100,2), "%")
+                #print(str(evalu) + " from " + str(n_test))
             else:
                 print("Epoch complete: ", j)
 

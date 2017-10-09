@@ -325,7 +325,8 @@ def extractBoxes(refpos, path):
         # resize to 40x40 image
         box = box.resize((40,40))
         # iterative folder
-        folder = path[path.find("/")+1:path.find(".")]
+        # necessary as glob.glob has a kind of random sorting
+        folder = path[path.find("/Bogen")+1:path.find(".")]
         # path and folder
         directory = "boxes/" + folder
         # check if folder exists

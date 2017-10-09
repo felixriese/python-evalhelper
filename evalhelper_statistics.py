@@ -22,7 +22,7 @@ def printStats(summary):
         for acounter in range(5):
             stats[qcounter][acounter] = round(np.count_nonzero(summary[:,qcounter] == acounter) / float(28) * 100, 2)
 
-    print("###\nBoegen - Evaluation\n###")
+    print("\n\n###\nBoegen - Evaluation\n###")
     print("Q\t1\t2\t3\t4\t5\t|  Mean")
     for i, question in enumerate(stats):
         # print(question)

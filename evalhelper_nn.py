@@ -32,14 +32,14 @@ class Network(object):
             random initial weights and bias
 
         """
-
         # layers
         self.num_layers = len(sizes)
         self.sizes = sizes
         # random initials with fixed seed
         random.seed(1)
         self.biases = [np.random.randn(x, 1) for x in sizes[1:]]
-        self.weights = [(np.random.randn(x, y)/math.sqrt(self.sizes[0])) for x, y in zip(self.sizes[1:], self.sizes[:-1])]
+        self.weights = [(np.random.randn(x, y)/math.sqrt(self.sizes[0]))
+                        for x, y in zip(self.sizes[1:], self.sizes[:-1])]
         # batch, iterations and learning rate
         self.mini_batchsize = 50
         self.epochs = 3
@@ -62,28 +62,30 @@ class Network(object):
         None : none
 
         """
-
         # length of training data
         n = len(training_data)
 
         # length of optional test data
-        if test_data: n_test = len(test_data)
+        if test_data:
+            n_test = len(test_data)
 
         # loop throug epochs
         for j in range(self.epochs):
-        	# randomly sort training data for mini batches
+            # randomly sort training data for mini batches
             random.shuffle(training_data)
             # one mini batch only -> seems to be described in exercise (point c)
             #self.update_mini_batch(training_data[0:self.mini_batchsize], self.eta)
             # create mini batches -> use entire training_data set
-            mini_batches = [ training_data[k:k+self.mini_batchsize] for k in range(0, n, self.mini_batchsize)]
+            mini_batches = [training_data[k:k+self.mini_batchsize]
+                            for k in range(0, n, self.mini_batchsize)]
             # loop through mini batches and update weights
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, self.eta)
             # print progress if test data is provided
             if test_data:
                 evalu = self.evaluate(test_data)
-                print("Epoch:", (j+1), evalu, "from" , n_test, "->", round(evalu/n_test*100,2), "%")
+                print("Epoch:", (j+1), evalu, "from", n_test, "->",
+                      round(evalu/n_test*100, 2), "%")
             else:
                 print("Epoch complete: ", j)
 
@@ -105,7 +107,6 @@ class Network(object):
             update of weights and bias of NN object
 
         """
-
         # storage for nablas
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
@@ -116,8 +117,10 @@ class Network(object):
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
         # update weights
-        self.weights = [w-(float(eta)/len(mini_batch))*nw for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b-(float(eta)/len(mini_batch))*nb for b, nb in zip(self.biases, nabla_b)]
+        self.weights = [w-(float(eta)/len(mini_batch))*nw
+                        for w, nw in zip(self.weights, nabla_w)]
+        self.biases = [b-(float(eta)/len(mini_batch))*nb
+                       for b, nb in zip(self.biases, nabla_b)]
 
 
     def backprop(self, x, y):
@@ -137,7 +140,6 @@ class Network(object):
             gradient of single pair
 
         """
-
         # storage
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
@@ -188,7 +190,6 @@ class Network(object):
             delta
 
         """
-
         return (a-y)
 
 
@@ -206,7 +207,6 @@ class Network(object):
             predicted NN result
 
         """
-
         # loop through NN
         for b, w in zip(self.biases, self.weights):
             a = sigmoid(np.dot(w, a) + b)
@@ -228,9 +228,9 @@ class Network(object):
             accuracy of NN, number of correct classifications
 
         """
-
         # evaluate each x of test data
-        test_results = [(np.argmax(self.feedforward(x)), np.argmax(y)) for (x, y) in test_data]
+        test_results = [(np.argmax(self.feedforward(x)), np.argmax(y))
+                        for (x, y) in test_data]
         # return sum of correct classifications
         return sum(int(x == y) for (x, y) in test_results)
 
@@ -249,7 +249,6 @@ class Network(object):
             (0,1) or (1,0) vector
 
         """
-
         return (np.argmax(self.feedforward(inputdata)))
 
 
@@ -269,7 +268,6 @@ def sigmoid(z):
         activated vector
 
     """
-
     return 1.0/(1.0+np.exp(-z))
 
 
@@ -287,5 +285,4 @@ def sigmoid_prime(z):
         derivative at z
 
     """
-
     return sigmoid(z)*(1-sigmoid(z))

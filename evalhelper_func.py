@@ -9,7 +9,6 @@
 # Standard library
 import csv
 import os
-import pdb
 
 # Third-party libraries
 from PIL import Image, ImageDraw
@@ -31,14 +30,13 @@ def getReference(boegen_folder, doDraw=False):
         Path to folder of boegen
     doDraw : bool, optional
         If true, the reverence evaluation file is drawn
-        
+
     Returns
     -------
     refpos : dict
         Dictionary of all reference positions
 
     """
-
     path = boegen_folder + "/Bogen3.jpg"
     # positions of actual boxes on reference bogen
     refpos = getRefPositions("reference_positions.csv")
@@ -60,7 +58,6 @@ def drawFile(refpos, path):
         Path to file
 
     """
-
     im = Image.open(path)
     draw = ImageDraw.Draw(im)
     for i in range(len(refpos["x0"])):
@@ -85,7 +82,6 @@ def getRefPositions(path):
         Dictionary containing the positions of the reference file.
 
     """
-
     posdict = {}
 
     with open(path) as posfile:
@@ -117,7 +113,6 @@ def getMSEBetweenTwoImages(im1, im2, x_max=36, y_max=36):
         Mean squared error
 
     """
-
     mse = 0
     for i in range(y_max):
         for j in range(x_max):
@@ -142,7 +137,6 @@ def findReferenceMasks(image):
         Positions [x,y] of the reference points (corners).
 
     """
-
     im = Image.open(image)
 
     # mask upper left
@@ -237,7 +231,6 @@ def getTransformationMatrix(refPoints, newPoints):
         Matrix A and vector b of the linear transformation
 
     """
-
     def errFunc(x):
         A = x[:4].reshape(2, 2)
         b = x[4:]
@@ -267,7 +260,6 @@ def transformPoint(tmatrix, point):
         Transformed 2D point
 
     """
-
     A = tmatrix[:4].reshape(2, 2)
     b = tmatrix[4:]
     newpoint = np.dot(A, point) + b
@@ -292,7 +284,6 @@ def getTransformedPositions(tmatrix, path, boegen_folder):
         New dictionary of all reference positions
 
     """
-
     refpos = getReference(boegen_folder, doDraw=True)
 
     # transform point for point
@@ -329,7 +320,6 @@ def extractBoxes(refpos, path):
         Boxes as images
 
     """
-
     # load image
     im = Image.open(path)
 
@@ -341,7 +331,7 @@ def extractBoxes(refpos, path):
         # cut box out of image
         box = im.crop(corners)
         # resize to 40x40 image
-        box = box.resize((40,40))
+        box = box.resize((40, 40))
         # iterative folder
         # necessary as glob.glob has a kind of random sorting
         folder = path[path.find("/Bogen")+1:path.find(".")]
@@ -354,6 +344,3 @@ def extractBoxes(refpos, path):
         name = "box" + str(i)
         # save as image
         box.save(directory + "/" + name + ".png")
-
-
-

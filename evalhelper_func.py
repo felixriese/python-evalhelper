@@ -9,6 +9,7 @@
 # Standard library
 import csv
 import os
+import pdb
 
 # Third-party libraries
 from PIL import Image, ImageDraw
@@ -21,14 +22,16 @@ from scipy.linalg import norm
 # ---------------------------------------------------------------------------
 
 
-def getReference(doDraw=False):
+def getReference(boegen_folder, doDraw=False):
     """Get reference points for the chosen file.
 
     Parameters
     ----------
+    boegen_folder : str
+        Path to folder of boegen
     doDraw : bool, optional
         If true, the reverence evaluation file is drawn
-
+        
     Returns
     -------
     refpos : dict
@@ -36,7 +39,8 @@ def getReference(doDraw=False):
 
     """
 
-    path = "boegen/Bogen3.jpg"
+    path = boegen_folder + "/Bogen3.jpg"
+    # positions of actual boxes on reference bogen
     refpos = getRefPositions("reference_positions.csv")
 
     if doDraw:
@@ -117,6 +121,7 @@ def getMSEBetweenTwoImages(im1, im2, x_max=36, y_max=36):
     mse = 0
     for i in range(y_max):
         for j in range(x_max):
+            # compare pixel wise, ie "value" of each pixel
             mse += (im1[i, j] - im2[i, j])**2
     return mse/(y_max*x_max)
 
@@ -145,12 +150,15 @@ def findReferenceMasks(image):
     mask_ul_px = mask_ul.load()
     pos_ul = [0, 0]
     mse_min = 999999.
+    # scan through predefined area of bogen picture
     for x in range(30, 110):
         for y in range(650, 730):
+            # extract rectangular on which corner is searched
             px = im.crop([x, y, x+52, y+52]).load()
             mse_curr = getMSEBetweenTwoImages(mask_ul_px, px, 52, 52)
             if mse_curr < mse_min:
                 mse_min = mse_curr
+                # LL pixel position
                 pos_ul = [x, y]
     # print(mse_min, pos_ul)
 
@@ -266,7 +274,7 @@ def transformPoint(tmatrix, point):
     return newpoint
 
 
-def getTransformedPositions(tmatrix, path):
+def getTransformedPositions(tmatrix, path, boegen_folder):
     """Get new box positions of file.
 
     Parameters
@@ -275,6 +283,8 @@ def getTransformedPositions(tmatrix, path):
         Matrix A and vector b of the linear transformation
     path : str
         Path to file
+    boegen_folder : str
+        Path to folder of boegen
 
     Returns
     -------
@@ -283,7 +293,7 @@ def getTransformedPositions(tmatrix, path):
 
     """
 
-    refpos = getReference(doDraw=True)
+    refpos = getReference(boegen_folder, doDraw=True)
 
     # transform point for point
     for i in range(len(refpos["x0"])):

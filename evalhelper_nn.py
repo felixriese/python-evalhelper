@@ -110,7 +110,7 @@ class Network(object):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         for x, y in mini_batch:
-            # derivative for single training pair
+            # derivative for single training pair -> use general backprob for gradient (!)
             delta_nabla_b, delta_nabla_w = self.backprop(x, y)
             # elemtwise addition (!)
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
@@ -145,21 +145,27 @@ class Network(object):
         activation = x
         activations = [x]
         zs = []
+        # loop through the NN and save a,z for each layer
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, activation) + b
             zs.append(z)
             activation = sigmoid(z)
             activations.append(activation)
         # backward pass
+        # delta^L -> delta of output layer -> BP1
         delta = self.delta_ce(activations[-1], y)
+        # partial derivs after b and W for last layer
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
         # backward calculation for all deltas and respective derivatives
         for l in range(2, self.num_layers):
             z = zs[-l]
             sp = sigmoid_prime(z)
+            # BP2
             delta = np.dot(self.weights[-l+1].transpose(), delta) * float(sp)
+            # BP3
             nabla_b[-l] = delta
+            # BP4
             nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
         # return gradients
         return (nabla_b, nabla_w)
@@ -229,12 +235,12 @@ class Network(object):
         return sum(int(x == y) for (x, y) in test_results)
 
 
-    def crossed(self, input):
+    def crossed(self, inputdata):
         """ Check if single box is crossed.
 
         Parameters
         ----------
-        input : ndarray
+        inputdata : ndarray
             input box
 
         Returns
@@ -244,7 +250,7 @@ class Network(object):
 
         """
 
-        return (np.argmax(self.feedforward(input)))
+        return (np.argmax(self.feedforward(inputdata)))
 
 
 #####

@@ -34,7 +34,7 @@ def loaddata():
 
     """
 
-	# number of data
+	# number of data -> 27449
 	nrd = 5573 + 21867
 	# split : training vs test
 	trdata_nrd = int(round(nrd*0.75))
@@ -43,24 +43,26 @@ def loaddata():
 	# storage of data, nrd rows and 1600 columns (pixels)
 	storage = np.zeros(shape=(nrd,1600), dtype=float)
 
-	# iterative files
+	# list of pathnames for all pictures
 	crossed_files = glob.glob("crosses/work_type_crossed/*.png")
 	empty_files = glob.glob("crosses/work_type_empty/*.png")
 	files = crossed_files + empty_files
 
 	# loop through all
 	for counter in range(len(files)):
-		# convert greyscale and get value for each pixel
+		# convert greyscale and get value (0-255) for each pixel (scaled to 0-1)
 		cur_px = np.array(Image.open(files[counter]).convert('L').getdata()) / float(255)
 		# save in storage
 		storage[counter] = cur_px
 
-	# crossed vs empty
+	# crossed vs empty -> desired output values
 	yvalues = np.zeros(shape=(nrd,2), dtype=float)
 	for j in range(nrd):
 		if j <= 5573:
+			# crossed is (0,1) vector
 			yvalues[j] = np.array([0,1])
 		else:
+			# uncrossed is (1,0) vector
 			yvalues[j] = np.array([1,0])
 
 	# return as list of tuples (x,y) whereas x = 1600x1 np.array, y = 2x1 np.array
@@ -70,7 +72,7 @@ def loaddata():
 	random.shuffle(dataset)
 	# split into training and test data
 	training_data = dataset[:trdata_nrd]
-	test_data = dataset[trdata_nrd+1:]
+	test_data = dataset[trdata_nrd:]
 	# return
 	return (training_data, test_data)
 
@@ -90,7 +92,7 @@ def loadbogen(path):
 
 	"""
 
-	# storage of data, 14 rows with 5x1600 arrays in each (answers x pixels)
+	# storage of data, 14 "rows" with 5x1600 arrays in each (answers x pixels)
 	storage = np.zeros(shape=(14,5,1600), dtype=float)
 
 	# current path
@@ -104,7 +106,7 @@ def loadbogen(path):
 	for counter in range(70):
 		# current_box
 		current_box = current_bogen + str(counter) + ".png"
-		# convert greyscale and get value for each pixel
+		# convert greyscale and get value (0-255) for each pixel (scaled to 0-1)
 		cur_px = np.array(Image.open(current_box).convert('L').getdata()) / float(255)
 		# save in storage
 		storage[i][j] = cur_px

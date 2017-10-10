@@ -32,13 +32,14 @@ def printStats(summary):
 
     """
 
-    # storage
+    # storage -> 14x5 as 14 questions and 5 answers each
     stats = np.zeros(shape=(14,5), dtype=float)
-    # loop
+    # loop through all
     for qcounter in range(14):
         for acounter in range(5):
+            # count non_zeros equal to 0-4 in each column (ie all rows)
             stats[qcounter][acounter] = round(np.count_nonzero(summary[:,qcounter] == acounter) / float(28) * 100, 2)
-
+    # print stats
     print("\n\n###\nBoegen - Evaluation\n###")
     print("Q\t1\t2\t3\t4\t5\t|  Mean")
     for i, question in enumerate(stats):

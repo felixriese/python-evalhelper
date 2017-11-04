@@ -4,11 +4,7 @@
 # Imports
 # ---------------------------------------------------------------------------
 
-# Standard library
 import random
-import pdb
-
-# Third-party libraries
 import numpy as np
 import math
 
@@ -16,10 +12,12 @@ import math
 # Class and functions
 # ---------------------------------------------------------------------------
 
+
 class Network(object):
+    """Neural network class."""
 
     def __init__(self, sizes):
-        """ Constructor.
+        """Constructor.
 
         Parameters
         ----------
@@ -45,9 +43,8 @@ class Network(object):
         self.epochs = 3
         self.eta = 0.1
 
-
     def SGD(self, training_data, test_data=None):
-        """ Stochastic gradient descent.
+        """Stochastic gradient descent.
 
         Parameters
         ----------
@@ -73,8 +70,8 @@ class Network(object):
         for j in range(self.epochs):
             # randomly sort training data for mini batches
             random.shuffle(training_data)
-            # one mini batch only -> seems to be described in exercise (point c)
-            #self.update_mini_batch(training_data[0:self.mini_batchsize], self.eta)
+            # one mini batch only -> seems to be described in exercise (c)
+            # self.update_mini_batch(training_data[0:self.mini_batchsize], self.eta)
             # create mini batches -> use entire training_data set
             mini_batches = [training_data[k:k+self.mini_batchsize]
                             for k in range(0, n, self.mini_batchsize)]
@@ -89,9 +86,8 @@ class Network(object):
             else:
                 print("Epoch complete: ", j)
 
-
     def update_mini_batch(self, mini_batch, eta):
-        """ Upddate weights for a single mini batch.
+        """Upddate weights for a single mini batch.
 
         Parameters
         ----------
@@ -122,9 +118,8 @@ class Network(object):
         self.biases = [b-(float(eta)/len(mini_batch))*nb
                        for b, nb in zip(self.biases, nabla_b)]
 
-
     def backprop(self, x, y):
-        """ Partial derivative of cost function for single pair x,y.
+        """Partial derivative of cost function for single pair x,y.
 
         Parameters
         ----------
@@ -172,9 +167,8 @@ class Network(object):
         # return gradients
         return (nabla_b, nabla_w)
 
-
     def delta_ce(self, a, y):
-        """ Delta for cross-entropy cost function.
+        """Delta for cross-entropy cost function.
 
         Parameters
         ----------
@@ -192,9 +186,8 @@ class Network(object):
         """
         return (a-y)
 
-
     def feedforward(self, a):
-        """ Feedforward of NN.
+        """Feedforward of NN.
 
         Parameters
         ----------
@@ -213,9 +206,8 @@ class Network(object):
         # return prediction
         return a
 
-
     def evaluate(self, test_data):
-        """ Evaluate the accuracy of the NN given test_data.
+        """Evaluate the accuracy of the NN given test_data.
 
         Parameters
         ----------
@@ -234,9 +226,8 @@ class Network(object):
         # return sum of correct classifications
         return sum(int(x == y) for (x, y) in test_results)
 
-
     def crossed(self, inputdata):
-        """ Check if single box is crossed.
+        """Check if single box is crossed.
 
         Parameters
         ----------
@@ -252,10 +243,9 @@ class Network(object):
         return (np.argmax(self.feedforward(inputdata)))
 
 
-#####
 # General functions
 def sigmoid(z):
-    """ Sigmoid activation function.
+    """Sigmoid activation function.
 
     Parameters
     ----------
@@ -272,7 +262,7 @@ def sigmoid(z):
 
 
 def sigmoid_prime(z):
-    """ Derivative of the sigmoid activation function.
+    """Derive the sigmoid activation function.
 
     Parameters
     ----------

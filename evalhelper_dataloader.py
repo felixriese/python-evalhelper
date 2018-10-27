@@ -1,23 +1,11 @@
 """Evaluation helper - dataloader for NN."""
-
-# ---------------------------------------------------------------------------
-# Imports
-# ---------------------------------------------------------------------------
-
-# Standard library
 import glob
 import random
-import pdb
-
-# Third-party libraries
 import numpy as np
-# print the entire array independent of its size
-np.set_printoptions(threshold=np.nan)
 from PIL import Image
 
-# ---------------------------------------------------------------------------
-# functions
-# ---------------------------------------------------------------------------
+# print the entire array independent of its size
+np.set_printoptions(threshold=np.nan)
 
 
 def loaddata():
@@ -49,7 +37,8 @@ def loaddata():
     # loop through all
     for counter in range(len(files)):
         # convert greyscale & get value (0-255) for each pixel (scaled to 0-1)
-        cur_px = np.array(Image.open(files[counter]).convert('L').getdata()) / float(255)
+        cur_px = np.array(
+            Image.open(files[counter]).convert('L').getdata()) / float(255)
         # save in storage
         storage[counter] = cur_px
 
@@ -63,7 +52,9 @@ def loaddata():
             # uncrossed is (1,0) vector
             yvalues[j] = np.array([1, 0])
 
-    # return as list of tuples (x,y) whereas x = 1600x1 np.array, y = 2x1 np.array
+    # return as list of tuples (x,y) whereas
+    # x = 1600x1 np.array,
+    # y = 2x1 np.array
     dataset = [(np.reshape(s, (1600, 1)), np.reshape(y, (2, 1)))
                for s, y in zip(storage, yvalues)]
     # shuffle before split with fixed seed
@@ -91,7 +82,7 @@ def loadbogen(path):
 
     """
     # storage of data, 14 "rows" with 5x1600 arrays in each (answers x pixels)
-    storage = np.zeros(shape=(14,5,1600), dtype=float)
+    storage = np.zeros(shape=(14, 5, 1600), dtype=float)
 
     # current path
     current_bogen = path + "/box"
@@ -104,8 +95,9 @@ def loadbogen(path):
     for counter in range(70):
         # current_box
         current_box = current_bogen + str(counter) + ".png"
-        # convert greyscale and get value (0-255) for each pixel (scaled to 0-1)
-        cur_px = np.array(Image.open(current_box).convert('L').getdata()) / float(255)
+        # convert greyscale and get value (0-255) for each pixel (scaled 0-1)
+        cur_px = np.array(
+            Image.open(current_box).convert('L').getdata()) / float(255)
         # save in storage
         storage[i][j] = cur_px
         # increase iteration

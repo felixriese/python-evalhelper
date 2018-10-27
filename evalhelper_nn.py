@@ -1,16 +1,8 @@
 """Evaluation helper - Neural Network."""
 
-# ---------------------------------------------------------------------------
-# Imports
-# ---------------------------------------------------------------------------
-
 import random
 import numpy as np
 import math
-
-# ---------------------------------------------------------------------------
-# Class and functions
-# ---------------------------------------------------------------------------
 
 
 class Network(object):
@@ -71,7 +63,8 @@ class Network(object):
             # randomly sort training data for mini batches
             random.shuffle(training_data)
             # one mini batch only -> seems to be described in exercise (c)
-            # self.update_mini_batch(training_data[0:self.mini_batchsize], self.eta)
+            # self.update_mini_batch(training_data[0:self.mini_batchsize],
+            #     self.eta)
             # create mini batches -> use entire training_data set
             mini_batches = [training_data[k:k+self.mini_batchsize]
                             for k in range(0, n, self.mini_batchsize)]
@@ -107,7 +100,8 @@ class Network(object):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         for x, y in mini_batch:
-            # derivative for single training pair -> use general backprob for gradient (!)
+            # derivative for single training pair
+            # -> use general backprob for gradient (!)
             delta_nabla_b, delta_nabla_w = self.backprop(x, y)
             # elemtwise addition (!)
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]

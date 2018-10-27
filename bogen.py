@@ -1,20 +1,10 @@
 """Evaluation helper - Bogen class."""
-
-# ---------------------------------------------------------------------------
-# Imports
-# ---------------------------------------------------------------------------
-
 import os
 import csv
 import numpy as np
 from PIL import Image, ImageDraw
 from scipy.optimize import minimize
 from scipy.linalg import norm
-
-# ---------------------------------------------------------------------------
-# Class and functions
-# ---------------------------------------------------------------------------
-
 
 class Bogen(object):
     """Class of Bogen for every file to be evaluated."""

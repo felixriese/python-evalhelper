@@ -2,10 +2,6 @@
 
 """Evaluation helper part 3 - evaluate neural network."""
 
-# ---------------------------------------------------------------------------
-# Imports
-# ---------------------------------------------------------------------------
-
 import pickle
 import numpy as np
 import glob
@@ -14,9 +10,6 @@ import glob
 import evalhelper_dataloader as dl
 import evalhelper_statistics as st
 
-# ---------------------------------------------------------------------------
-# Main routine
-# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
 
@@ -24,7 +17,9 @@ if __name__ == "__main__":
     evalnn = pickle.load(open("nn_object.p", "rb"))
 
     # manual check of one question
-    # test_box = np.reshape(np.array(Image.open("boxes/Bogen5/box0.png").convert('L').getdata()) / 255, (1600,1))
+    # test_box = np.reshape(np.array(
+    #     Image.open("boxes/Bogen5/box0.png").convert('L').getdata()) / 255,
+    #     (1600,1))
     # print(evalnn.crossed(test_box))
 
     # current path of box pictures

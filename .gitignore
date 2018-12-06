@@ -103,7 +103,3 @@ ENV/
 # other
 .DS_Store
 .vscode
-boegen/
-boxes/
-crosses/
-masks/
